@@ -44,7 +44,7 @@ public class SecurityConfig {
 					.formLogin()
 						.loginPage("/login.html").loginProcessingUrl("/login")
 						.successHandler(authenticationSuccessHandler)
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/index.html").invalidateHttpSession(true)
 				.and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
 				.and()
 				/*.addFilterBefore(restAuthFilter, UsernamePasswordAuthenticationFilter.class)*/

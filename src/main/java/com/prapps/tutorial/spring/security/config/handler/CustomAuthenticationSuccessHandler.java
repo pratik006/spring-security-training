@@ -65,7 +65,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		if (isUser) {
 			return "/homepage.html";
 		} else if (isAdmin) {
-			return "/console.html";
+			return "/index.html";
 		} else {
 			throw new IllegalStateException();
 		}

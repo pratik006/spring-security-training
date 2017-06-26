@@ -8,13 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/rest/secured")
 public class MyRestController {
 
-	@RequestMapping(value="/public", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/hello", method = {RequestMethod.GET, RequestMethod.POST})
 	public String hello() {
 		return "hello";
-	}
-	
-	@RequestMapping(value="/admin", method = {RequestMethod.GET, RequestMethod.POST})
-	public String admin() {
-		return "admin";
 	}
 }

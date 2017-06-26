@@ -1,10 +1,13 @@
 package com.prapps.tutorial.spring.security.rest;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,6 +17,7 @@ import javax.xml.bind.DatatypeConverter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -77,7 +81,12 @@ public class JwtTokenHelper {
 	       .setSigningKey(DatatypeConverter.parseBase64Binary(SIGNING_KEY))
 	       .parseClaimsJws(token).getBody();
 	    final String username = claims.get("username").toString();
-	    final Collection<? extends GrantedAuthority> auths = (Collection<? extends GrantedAuthority>)claims.get("authorities");
+	    final Collection<LinkedHashMap<String, String>> auths = (Collection<LinkedHashMap<String, String>>)claims.get("authorities");
+	    
+	    List<SimpleGrantedAuthority> list = new ArrayList<>(auths.size());
+		for (LinkedHashMap<String, String> auth : auths) {
+			list.add(new SimpleGrantedAuthority(auth.get("authority")));
+		}
 	    
 	    UserDetails userDetails = new UserDetails() {
 			private static final long serialVersionUID = 1L;
@@ -114,7 +123,7 @@ public class JwtTokenHelper {
 			
 			@Override
 			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return auths;
+				return list;
 			}
 		};
 	    return userDetails;

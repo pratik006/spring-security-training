@@ -19,7 +19,7 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class WebAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 	protected Logger LOG = Logger.getLogger(this.getClass());
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();

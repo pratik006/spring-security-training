@@ -1,6 +1,5 @@
 package com.prapps.tutorial.spring.security.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,11 +11,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RestAuthenticationManager implements AuthenticationManager {
-	private UserDetailsService daoAuthenticationProvider;
+	private UserDetailsService userDetailsService;
 	
-	@Autowired 
-	public RestAuthenticationManager(AuthenticationManagerBuilder auth) {
-		this.daoAuthenticationProvider = auth.getDefaultUserDetailsService();
+	public void setRestAuthenticationManager(AuthenticationManagerBuilder auth) {
+		this.userDetailsService = auth.getDefaultUserDetailsService();
 	}
 	
 	@Override
@@ -25,7 +23,7 @@ public class RestAuthenticationManager implements AuthenticationManager {
 		String username = String.valueOf(auth.getPrincipal());
 		String password = String.valueOf(auth.getCredentials());
 		  
-		UserDetails user = daoAuthenticationProvider.loadUserByUsername(username);
+		UserDetails user = userDetailsService.loadUserByUsername(username);
 		if (!user.getPassword().equals(password)) {
 		    throw new BadCredentialsException("Bad Credentials");
 		}

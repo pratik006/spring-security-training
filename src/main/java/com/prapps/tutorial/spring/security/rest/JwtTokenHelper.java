@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security;
+package com.prapps.tutorial.spring.security.rest;
 
 import java.security.Key;
 import java.util.Arrays;

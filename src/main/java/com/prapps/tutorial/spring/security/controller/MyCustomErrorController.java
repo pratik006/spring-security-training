@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security;
+package com.prapps.tutorial.spring.security.controller;
 
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.stereotype.Controller;

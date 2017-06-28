@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.stereotype.Component;
 
+import com.prapps.tutorial.spring.security.exception.SecurityException;
+
 @Component
 public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -44,7 +46,12 @@ public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFi
 		}
 
 		String authToken = header.substring(7);
-		UserDetails userDetails = JwtTokenHelper.verifyToken(authToken);
+		UserDetails userDetails;
+		try {
+			userDetails = JwtTokenHelper.verifyToken(authToken);
+		} catch (SecurityException e) {
+			throw new AuthenticationCredentialsNotFoundException(e.getMsg());
+		}
 		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
 	}
 

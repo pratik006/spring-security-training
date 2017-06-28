@@ -20,6 +20,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.prapps.tutorial.spring.security.exception.SecurityException;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -76,10 +78,16 @@ public class JwtTokenHelper {
 	    return builder.compact();
 	}
 	
-	public static UserDetails verifyToken(String token) {
-	    Claims claims = Jwts.parser()         
-	       .setSigningKey(DatatypeConverter.parseBase64Binary(SIGNING_KEY))
-	       .parseClaimsJws(token).getBody();
+	public static UserDetails verifyToken(String token) throws SecurityException {
+		Claims claims;
+		try {
+			claims = Jwts.parser()         
+		       .setSigningKey(DatatypeConverter.parseBase64Binary(SIGNING_KEY))
+		       .parseClaimsJws(token).getBody();	
+		}catch(io.jsonwebtoken.MalformedJwtException ex) {
+			throw new SecurityException(ex, "Invalid token");
+		}
+	    
 	    final String username = claims.get("username").toString();
 	    final Collection<LinkedHashMap<String, String>> auths = (Collection<LinkedHashMap<String, String>>)claims.get("authorities");
 	    
@@ -129,7 +137,7 @@ public class JwtTokenHelper {
 	    return userDetails;
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws SecurityException {
 		GrantedAuthority g = new GrantedAuthority() {
 			@Override
 			public String getAuthority() {

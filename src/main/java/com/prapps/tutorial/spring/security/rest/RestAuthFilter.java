@@ -66,12 +66,15 @@ public class RestAuthFilter extends AbstractAuthenticationProcessingFilter {
 
 
         if(username == null || password == null) {
-        	throw new AuthenticationServiceException("Username or PAssword cannot be empty ");
+        	throw new AuthenticationServiceException("Username or Password cannot be empty ");
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, password, null);
         Authentication authResult = getAuthenticationManager().authenticate(authentication);
-        return authResult;
+        if (!authResult.isAuthenticated()) {
+        	throw new AuthenticationServiceException("Authentication failed");
+        }
+        return new UsernamePasswordAuthenticationToken(username, null, authResult.getAuthorities());
     }
 
 }

@@ -13,23 +13,26 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.prapps.tutorial.spring.security.rest.JwtTokenProcessingFilter;
+import com.prapps.tutorial.spring.security.rest.RestAuthFilter;
 import com.prapps.tutorial.spring.security.rest.RestAuthenticationManager;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	
+
 	@Configuration
     @Order(1)
     public static class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-		
+
 		public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/rest/secured/**";
-		
+		public static final String TOKEN_BASED_LOGIN_ENTRY_POINT = "/rest/login";
+
 		@Autowired AccessDeniedHandler accessDeniedHandler;
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
 		@Autowired private JwtTokenProcessingFilter jwtTokenProcessingFilter;
-		
+		@Autowired private RestAuthFilter restAuthFilter;
+
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
 			auth.inMemoryAuthentication()
@@ -37,10 +40,10 @@ public class SecurityConfig {
 				.and().withUser("user").password("user").roles("USER");
 			restAuthenticationManager.setRestAuthenticationManager(auth);
 		}
-		
+
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http
+			http//.csrf().disable().authorizeRequests()
 				.csrf().ignoringAntMatchers("/rest/**").and().authorizeRequests()
 				.antMatchers("/login.html").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
@@ -55,7 +58,11 @@ public class SecurityConfig {
 				.authorizeRequests()
 	                .antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated() // Protected API End-points
 	                	.and()
-	                		.addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);;
+	                		.addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+	                		/*.authorizeRequests()
+                .antMatchers(TOKEN_BASED_LOGIN_ENTRY_POINT).authenticated() // Protected API End-points
+                	.and()
+                		.addFilterBefore(restAuthFilter, UsernamePasswordAuthenticationFilter.class)*/;
 		};
     }
 }

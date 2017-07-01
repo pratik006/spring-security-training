@@ -26,11 +26,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 
 public class JwtTokenHelper {
 	private static final String ISSUER = "apps-pratiks application";
 	private static final String SIGNING_KEY = "LongAndHardToGuessValueWithSpecialCharacters";
-	
+
 	private static long durationInDays = 5000000l;
 
 	/**
@@ -39,12 +40,12 @@ public class JwtTokenHelper {
 	 * which ensures that the token is authentic and has not been modified.
 	 * Using a JWT eliminates the need to store authentication session
 	 * information in a database.
-	 * 
+	 *
 	 * @param userId
 	 * @param durationInDays
 	 * @return
 	 */
-	
+
 	public static String createJsonWebToken(Authentication auth) {
 		//The JWT signature algorithm we will be using to sign the token
 	    SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -56,10 +57,11 @@ public class JwtTokenHelper {
 	    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SIGNING_KEY);
 	    Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-	    Map<String, Object> claims = new HashMap<String, Object>();
-	    claims.put("username", auth.getPrincipal());
-	    claims.put("authorities", auth.getAuthorities());
-	    
+	    Map<String, Object> claimItems = new HashMap<String, Object>();
+	    claimItems.put("username", auth.getPrincipal());
+	    claimItems.put("authorities", auth.getAuthorities());
+	    Claims claims = new DefaultClaims(claimItems);
+
 	    //Let's set the JWT Claims
 	    JwtBuilder builder = Jwts.builder().setId(UUID.randomUUID().toString())
 	                                .setIssuedAt(now)
@@ -77,25 +79,25 @@ public class JwtTokenHelper {
 	    //Builds the JWT and serializes it to a compact, URL-safe string
 	    return builder.compact();
 	}
-	
+
 	public static UserDetails verifyToken(String token) throws SecurityException {
 		Claims claims;
 		try {
-			claims = Jwts.parser()         
+			claims = Jwts.parser()
 		       .setSigningKey(DatatypeConverter.parseBase64Binary(SIGNING_KEY))
-		       .parseClaimsJws(token).getBody();	
+		       .parseClaimsJws(token).getBody();
 		}catch(io.jsonwebtoken.MalformedJwtException ex) {
 			throw new SecurityException(ex, "Invalid token");
 		}
-	    
-	    final String username = claims.get("username").toString();
-	    final Collection<LinkedHashMap<String, String>> auths = (Collection<LinkedHashMap<String, String>>)claims.get("authorities");
-	    
+
+	    final String username = claims.get("username", String.class);
+	    Collection<LinkedHashMap<String, String>> auths = claims.get("authorities", Collection.class);
+
 	    List<SimpleGrantedAuthority> list = new ArrayList<>(auths.size());
 		for (LinkedHashMap<String, String> auth : auths) {
 			list.add(new SimpleGrantedAuthority(auth.get("authority")));
 		}
-	    
+
 	    UserDetails userDetails = new UserDetails() {
 			private static final long serialVersionUID = 1L;
 
@@ -103,32 +105,32 @@ public class JwtTokenHelper {
 			public boolean isEnabled() {
 				return true;
 			}
-			
+
 			@Override
 			public boolean isCredentialsNonExpired() {
 				return false;
 			}
-			
+
 			@Override
 			public boolean isAccountNonLocked() {
 				return false;
 			}
-			
+
 			@Override
 			public boolean isAccountNonExpired() {
 				return false;
 			}
-			
+
 			@Override
 			public String getUsername() {
 				return username;
 			}
-			
+
 			@Override
 			public String getPassword() {
 				return null;
 			}
-			
+
 			@Override
 			public Collection<? extends GrantedAuthority> getAuthorities() {
 				return list;
@@ -136,9 +138,10 @@ public class JwtTokenHelper {
 		};
 	    return userDetails;
 	}
-	
+
 	public static void main(String args[]) throws SecurityException {
 		GrantedAuthority g = new GrantedAuthority() {
+			private static final long serialVersionUID = 1L;
 			@Override
 			public String getAuthority() {
 				return "ROLE_ADMIN";
@@ -149,5 +152,5 @@ public class JwtTokenHelper {
 		UserDetails user = verifyToken(token);
 		System.out.println(user.getUsername());
 	}
-	
+
 }

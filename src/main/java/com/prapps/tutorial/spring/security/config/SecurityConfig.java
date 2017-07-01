@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.prapps.tutorial.spring.security.rest.JwtTokenProcessingFilter;
-import com.prapps.tutorial.spring.security.rest.RestAuthFilter;
 import com.prapps.tutorial.spring.security.rest.RestAuthenticationManager;
 
 @Configuration
@@ -31,7 +30,6 @@ public class SecurityConfig {
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
 		@Autowired private JwtTokenProcessingFilter jwtTokenProcessingFilter;
-		@Autowired private RestAuthFilter restAuthFilter;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {

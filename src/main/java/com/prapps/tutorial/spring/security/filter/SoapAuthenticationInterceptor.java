@@ -29,13 +29,13 @@ public class SoapAuthenticationInterceptor implements EndpointInterceptor {
 		}
 
 		String token = bodyNode.getFirstChild().getTextContent();
-		if (token == null || !token.startsWith("Bearer ")) {
+		if (token == null) {
 			//throw new JwtTokenMissingException("No JWT token found in request headers");
 			//throw new RuntimeException("No JWT token found in request headers");
 			throw new AuthenticationCredentialsNotFoundException("No JWT token found in request headers");
 		}
-		String authToken = token.substring(7);
-		UserDetails user = JwtTokenHelper.verifyToken(authToken);
+		//String authToken = token.substring(7);
+		UserDetails user = JwtTokenHelper.verifyToken(token);
 
 		return user != null;
 	}

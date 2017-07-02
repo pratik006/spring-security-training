@@ -36,10 +36,32 @@
 					</execution>
 				</executions>
 				<configuration>
-					<schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
+					<schemaDirectory>${project.basedir}/src/main/resources/wsdl</schemaDirectory>
 					<outputDirectory>${project.basedir}/target/generated</outputDirectory>
 					<clearOutputDir>false</clearOutputDir>
 				</configuration>
+			</plugin>
+			<plugin>
+			    <groupId>org.jvnet.jaxb2.maven2</groupId>
+			    <artifactId>maven-jaxb2-plugin</artifactId>
+			    <version>0.13.1</version>
+			    <executions>
+			        <execution>
+			            <goals>
+			                <goal>generate</goal>
+			            </goals>
+			        </execution>
+			    </executions>
+			    <configuration>
+			        <schemaLanguage>WSDL</schemaLanguage>
+			        <generatePackage>hello.wsdl</generatePackage>
+			        <generateDirectory>target/generated</generateDirectory>
+			        <schemas>
+			            <schema>
+			                <url>src/main/resources/wsdl/countries.wsdl</url>
+			            </schema>
+			        </schemas>
+			    </configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -62,6 +84,10 @@
 		<dependency>
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
 		</dependency>
 		<!-- Soap Web service ends -->
 		

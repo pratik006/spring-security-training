@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://spring.io/guides/gs-producing-web-service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://spring.io/guides/gs-producing-web-service" targetNamespace="http://spring.io/guides/gs-producing-web-service">
   <wsdl:types>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://spring.io/guides/gs-producing-web-service">
-
-    <xs:element name="getCountryRequest">
+	<xs:import namespace="http://spring.io/guides/gs-producing-web-service" location="countries.xsd" />
+    <!-- <xs:element name="getCountryRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="name" type="xs:string"/>
@@ -31,9 +31,9 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="GBP"/>
             <xs:enumeration value="EUR"/>
-            <xs:enumeration value="PLN"/>
+            <xs:enumeration value="PLN"/>wsdl:types
         </xs:restriction>
-    </xs:simpleType>
+    </xs:simpleType> -->
 </xs:schema>
   </wsdl:types>
   <wsdl:message name="getCountryResponse">

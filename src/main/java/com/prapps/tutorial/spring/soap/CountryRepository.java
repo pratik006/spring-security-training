@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.junit.Assert;
 import org.springframework.stereotype.Component;
 
 import io.spring.guides.gs_producing_web_service.Country;
@@ -43,7 +42,7 @@ public class CountryRepository {
 	}
 
 	public Country findCountry(String name) {
-		Assert.assertNotNull(name, "The country's name must not be null");
+		assert name != null : "The country's name must not be null";
 		return countries.get(name);
 	}
 }

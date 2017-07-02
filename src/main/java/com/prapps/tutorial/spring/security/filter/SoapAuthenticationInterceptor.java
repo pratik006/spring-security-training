@@ -12,7 +12,7 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 import org.w3c.dom.Node;
 
-import com.prapps.tutorial.spring.security.rest.JwtTokenHelper;
+import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 @Component
 public class SoapAuthenticationInterceptor implements EndpointInterceptor {

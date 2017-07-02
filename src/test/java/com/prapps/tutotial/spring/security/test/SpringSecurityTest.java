@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prapps.tutorial.spring.ApplicationStarter;
 import com.prapps.tutorial.spring.security.dto.HelloResponse;
-import com.prapps.tutorial.spring.security.rest.JwtTokenHelper;
+import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -91,6 +91,22 @@ public class SpringSecurityTest {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		String token = JwtTokenHelper.createJsonWebToken(new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(auth)));
 		MvcResult mvcResult =  mvc.perform(MockMvcRequestBuilders.post("/rest/secured/hello")
+			.header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andReturn();
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonResponse = mvcResult.getResponse().getContentAsString();
+		LOG.debug("Response: " + jsonResponse);
+		HelloResponse actualResp = mapper.readValue(jsonResponse, HelloResponse.class);
+		Assert.assertEquals("hello", actualResp.getMessage());
+	}
+
+	@Test
+	public void shouldAccessSecuredSoapResource() throws Exception {
+		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		String token = JwtTokenHelper.createJsonWebToken(new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(auth)));
+		MvcResult mvcResult =  mvc.perform(MockMvcRequestBuilders.post("/ws")
 			.header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))

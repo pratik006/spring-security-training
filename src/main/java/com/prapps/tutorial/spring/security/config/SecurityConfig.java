@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.prapps.tutorial.spring.security.rest.JwtTokenProcessingFilter;
 import com.prapps.tutorial.spring.security.rest.RestAuthenticationManager;
+import com.prapps.tutorial.spring.security.rest.SoapTokenProcessingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,13 +24,14 @@ public class SecurityConfig {
     @Order(1)
     public static class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-		public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/rest/secured/**";
-		public static final String TOKEN_BASED_LOGIN_ENTRY_POINT = "/rest/login";
+		public static final String TOKEN_BASED_REST_ENTRY_POINT = "/rest/secured/**";
+		public static final String TOKEN_BASED_SOAP_ENTRY_POINT = "/rest/login";
 
 		@Autowired AccessDeniedHandler accessDeniedHandler;
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
 		@Autowired private JwtTokenProcessingFilter jwtTokenProcessingFilter;
+		@Autowired private SoapTokenProcessingFilter soapTokenProcessingFilter;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -42,8 +44,8 @@ public class SecurityConfig {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http//.csrf().disable().authorizeRequests()
-				.csrf().ignoringAntMatchers("/rest/**").and().authorizeRequests()
-				.antMatchers("/login.html").permitAll()
+				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
+				.antMatchers("/login.html", "/ws/**").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
 				.antMatchers("/manage").hasAnyRole("ADMIN")
 				.and()
@@ -54,13 +56,13 @@ public class SecurityConfig {
 				.and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
 				.and().csrf().and()
 				.authorizeRequests()
-	                .antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated() // Protected API End-points
+	                .antMatchers(TOKEN_BASED_REST_ENTRY_POINT).authenticated() // Protected API End-points
 	                	.and()
 	                		.addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-	                		/*.authorizeRequests()
-                .antMatchers(TOKEN_BASED_LOGIN_ENTRY_POINT).authenticated() // Protected API End-points
+	            .authorizeRequests()
+                .antMatchers(TOKEN_BASED_SOAP_ENTRY_POINT).authenticated() // Protected API End-points
                 	.and()
-                		.addFilterBefore(restAuthFilter, UsernamePasswordAuthenticationFilter.class)*/;
+                		.addFilterBefore(soapTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
 		};
     }
 }

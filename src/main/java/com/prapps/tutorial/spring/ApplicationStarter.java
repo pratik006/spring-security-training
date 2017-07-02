@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security;
+package com.prapps.tutorial.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

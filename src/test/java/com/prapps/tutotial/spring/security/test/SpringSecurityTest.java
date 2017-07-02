@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prapps.tutorial.spring.security.ApplicationStarter;
+import com.prapps.tutorial.spring.ApplicationStarter;
 import com.prapps.tutorial.spring.security.dto.HelloResponse;
 import com.prapps.tutorial.spring.security.rest.JwtTokenHelper;
 

@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.dto;
+package com.prapps.tutorial.spring.dto;
 
 public class HelloResponse {
 	private String message;

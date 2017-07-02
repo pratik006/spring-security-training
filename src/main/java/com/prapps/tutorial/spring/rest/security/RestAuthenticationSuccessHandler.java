@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.rest;
+package com.prapps.tutorial.spring.rest.security;
 
 import java.io.IOException;
 

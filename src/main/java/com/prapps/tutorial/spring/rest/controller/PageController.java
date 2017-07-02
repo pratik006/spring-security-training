@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.controller;
+package com.prapps.tutorial.spring.rest.controller;
 
 import java.util.HashMap;
 import java.util.Map;

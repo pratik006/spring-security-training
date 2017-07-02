@@ -19,9 +19,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prapps.tutorial.spring.security.rest.RestAuthenticationFailureHandler;
-import com.prapps.tutorial.spring.security.rest.RestAuthenticationManager;
-import com.prapps.tutorial.spring.security.rest.RestAuthenticationSuccessHandler;
+import com.prapps.tutorial.spring.rest.security.RestAuthenticationFailureHandler;
+import com.prapps.tutorial.spring.rest.security.RestAuthenticationManager;
+import com.prapps.tutorial.spring.rest.security.RestAuthenticationSuccessHandler;
 
 @Component
 public class RestAuthFilter extends AbstractAuthenticationProcessingFilter {

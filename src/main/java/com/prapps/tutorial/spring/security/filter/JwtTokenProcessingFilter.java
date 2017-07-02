@@ -20,9 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.stereotype.Component;
 
+import com.prapps.tutorial.spring.rest.security.TokenBasedAuthenticationSuccessHandlerImpl;
 import com.prapps.tutorial.spring.security.exception.SecurityException;
 import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
-import com.prapps.tutorial.spring.security.rest.TokenBasedAuthenticationSuccessHandlerImpl;
 
 @Component
 public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFilter {

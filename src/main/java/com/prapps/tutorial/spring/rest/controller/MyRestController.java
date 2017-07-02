@@ -1,10 +1,10 @@
-package com.prapps.tutorial.spring.security.controller;
+package com.prapps.tutorial.spring.rest.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.prapps.tutorial.spring.security.dto.HelloResponse;
+import com.prapps.tutorial.spring.dto.HelloResponse;
 
 @RestController
 @RequestMapping("/rest/secured")

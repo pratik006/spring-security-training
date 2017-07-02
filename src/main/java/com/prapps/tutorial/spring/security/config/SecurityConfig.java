@@ -12,8 +12,8 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.prapps.tutorial.spring.rest.security.RestAuthenticationManager;
 import com.prapps.tutorial.spring.security.filter.JwtTokenProcessingFilter;
-import com.prapps.tutorial.spring.security.rest.RestAuthenticationManager;
 
 @Configuration
 @EnableWebSecurity

@@ -1,4 +1,4 @@
-package com.prapps.tutotial.spring.security.test;
+package com.prapps.tutotial.spring.security.test.config;
 
 import java.io.StringWriter;
 

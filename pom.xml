@@ -41,28 +41,6 @@
 					<clearOutputDir>false</clearOutputDir>
 				</configuration>
 			</plugin>
-			<plugin>
-			    <groupId>org.jvnet.jaxb2.maven2</groupId>
-			    <artifactId>maven-jaxb2-plugin</artifactId>
-			    <version>0.13.1</version>
-			    <executions>
-			        <execution>
-			            <goals>
-			                <goal>generate</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			    <configuration>
-			        <schemaLanguage>WSDL</schemaLanguage>
-			        <generatePackage>hello.wsdl</generatePackage>
-			        <generateDirectory>target/generated</generateDirectory>
-			        <schemas>
-			            <schema>
-			                <url>src/main/resources/wsdl/countries.wsdl</url>
-			            </schema>
-			        </schemas>
-			    </configuration>
-			</plugin>
 		</plugins>
 	</build>
 

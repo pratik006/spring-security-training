@@ -1,19 +1,28 @@
 package com.prapps.tutorial.spring.soap;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.config.annotation.WsConfigurerAdapter;
+import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
+import com.prapps.tutorial.spring.security.filter.SoapAuthenticationInterceptor;
+
 @EnableWs
 @Configuration
-public class WebServiceConfig {
+public class WebServiceConfig extends WsConfigurerAdapter {
+	@Autowired SoapAuthenticationInterceptor soapAuthenticationInterceptor;
+
 	@Bean
 	public ServletRegistrationBean messageDispatcherServlet(ApplicationContext applicationContext) {
 		MessageDispatcherServlet servlet = new MessageDispatcherServlet();
@@ -36,4 +45,17 @@ public class WebServiceConfig {
 	public XsdSchema countriesSchema() {
 		return new SimpleXsdSchema(new ClassPathResource("countries.xsd"));
 	}
+
+	@Override
+	public void addInterceptors(List<EndpointInterceptor> interceptors) {
+        // register global interceptor
+        interceptors.add(soapAuthenticationInterceptor);
+
+        /*// register endpoint specific interceptor
+        interceptors.add(new PayloadRootSmartSoapEndpointInterceptor(
+                new CustomEndpointInterceptor(),
+                BeerEndpoint.NAMESPACE,
+                BeerEndpoint.BEER_REQUEST_LOCAL_PART));*/
+    }
+
 }

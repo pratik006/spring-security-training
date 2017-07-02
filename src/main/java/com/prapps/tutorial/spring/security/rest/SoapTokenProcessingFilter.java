@@ -18,18 +18,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.stereotype.Component;
 
 import com.prapps.tutorial.spring.security.exception.SecurityException;
 
-@Component
+//@Component
 public class SoapTokenProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	private final String TOKEN_FILTER_APPLIED = "TOKEN_FILTER_APPLIED";
 
 	@Autowired
 	public SoapTokenProcessingFilter(@Qualifier("restAuthenticationManager") AuthenticationManager authenticationManager) {
-		super("/soap/secured/**");
+		super("/ws/**");
 		super.setAuthenticationManager(authenticationManager);
 		setAuthenticationSuccessHandler(new TokenBasedAuthenticationSuccessHandlerImpl());
 	}

@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.prapps.tutorial.spring.security.rest.JwtTokenProcessingFilter;
 import com.prapps.tutorial.spring.security.rest.RestAuthenticationManager;
-import com.prapps.tutorial.spring.security.rest.SoapTokenProcessingFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,13 +24,13 @@ public class SecurityConfig {
     public static class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		public static final String TOKEN_BASED_REST_ENTRY_POINT = "/rest/secured/**";
-		public static final String TOKEN_BASED_SOAP_ENTRY_POINT = "/rest/login";
+		public static final String TOKEN_BASED_SOAP_ENTRY_POINT = "/ws";
 
 		@Autowired AccessDeniedHandler accessDeniedHandler;
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
 		@Autowired private JwtTokenProcessingFilter jwtTokenProcessingFilter;
-		@Autowired private SoapTokenProcessingFilter soapTokenProcessingFilter;
+		//@Autowired private SoapTokenProcessingFilter soapTokenProcessingFilter;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -59,10 +58,10 @@ public class SecurityConfig {
 	                .antMatchers(TOKEN_BASED_REST_ENTRY_POINT).authenticated() // Protected API End-points
 	                	.and()
 	                		.addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-	            .authorizeRequests()
-                .antMatchers(TOKEN_BASED_SOAP_ENTRY_POINT).authenticated() // Protected API End-points
-                	.and()
-                		.addFilterBefore(soapTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+	            /*.authorizeRequests()
+	                .antMatchers(TOKEN_BASED_SOAP_ENTRY_POINT).authenticated() // Protected API End-points
+	                	.and()
+	                		.addFilterBefore(soapTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class)*/;
 		};
     }
 }

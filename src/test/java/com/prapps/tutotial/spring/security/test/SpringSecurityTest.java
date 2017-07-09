@@ -1,5 +1,7 @@
 package com.prapps.tutotial.spring.security.test;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.apache.log4j.Logger;
@@ -11,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prapps.tutorial.spring.ApplicationStarter;
 import com.prapps.tutorial.spring.dto.HelloResponse;
+import com.prapps.tutorial.spring.security.filter.RestAuthFilter;
 import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 @RunWith(SpringRunner.class)
@@ -42,6 +45,7 @@ public class SpringSecurityTest {
 
 	@Autowired MockMvc mvc;
 	@Autowired WebApplicationContext wac;
+	@Autowired RestAuthFilter restAuthFilter;
 
 	@Before
 	public void setUp() {
@@ -52,10 +56,15 @@ public class SpringSecurityTest {
 			@Override
 			public String getAuthority() { return "ROLE_ADMIN"; }
 		};
+		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
 	@Test
 	public void shouldGetToken() throws Exception {
+		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac)
+				.apply(springSecurity())
+				.addFilters(restAuthFilter)
+				.build();
 		mvc.perform(MockMvcRequestBuilders.post("/rest/login")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content("{\"username\": \""+username+"\", \"password\": \""+password+"\"}")
@@ -78,18 +87,16 @@ public class SpringSecurityTest {
 			});
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void shouldFailWithUnauthException() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/rest/secured/hello")
-			.accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+		mvc.perform(MockMvcRequestBuilders.get("/rest/secured/hello"));
 	}
 
-	@Test
+	@Test @WithMockUser(username = "user", password = "user", roles = "USER")
 	public void shouldAccessSecuredResource() throws Exception {
-		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		String token = JwtTokenHelper.createJsonWebToken(new UsernamePasswordAuthenticationToken(username, password, null));
-		MvcResult mvcResult =  mvc.perform(MockMvcRequestBuilders.post("/rest/secured/hello")
-			.header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+
+		MvcResult mvcResult =  mvc.perform(post("/rest/secured/hello")
+			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andReturn();

@@ -50,12 +50,6 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 	public void addInterceptors(List<EndpointInterceptor> interceptors) {
         // register global interceptor
         interceptors.add(soapAuthenticationInterceptor);
-
-        /*// register endpoint specific interceptor
-        interceptors.add(new PayloadRootSmartSoapEndpointInterceptor(
-                new CustomEndpointInterceptor(),
-                BeerEndpoint.NAMESPACE,
-                BeerEndpoint.BEER_REQUEST_LOCAL_PART));*/
     }
 
 }

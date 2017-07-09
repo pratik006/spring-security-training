@@ -1,9 +1,16 @@
 package com.prapps.tutorial.spring.security.config;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +33,6 @@ public class SecurityConfig {
 		public static final String TOKEN_BASED_REST_ENTRY_POINT = "/rest/secured/**";
 		public static final String TOKEN_BASED_SOAP_ENTRY_POINT = "/ws";
 
-		@Autowired AccessDeniedHandler accessDeniedHandler;
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
 
@@ -42,7 +48,7 @@ public class SecurityConfig {
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
-				.antMatchers("/login.html", "/ws/**").permitAll()
+				.antMatchers("/login.html", "/rest/error", "/ws/**").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
 				//.antMatchers("/manage").hasAnyRole("ADMIN")
 				.and()
@@ -50,16 +56,33 @@ public class SecurityConfig {
 						.loginPage("/login.html").loginProcessingUrl("/login")
 						.successHandler(webAuthenticationSuccessHandler)
 				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/index.html").invalidateHttpSession(true)
-				.and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+				.and().exceptionHandling().accessDeniedHandler(accessDeniedHandler())
 				.and().csrf().and()
 				.authorizeRequests()
 	                .antMatchers(TOKEN_BASED_REST_ENTRY_POINT).authenticated() // Protected API End-points
 	                .and()
-	                .addFilterBefore(createJwtTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+	                .addFilterBefore(createJwtTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
+	                .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 		};
 
 		public JwtTokenProcessingFilter createJwtTokenProcessingFilter() {
 			return new JwtTokenProcessingFilter(restAuthenticationManager, TOKEN_BASED_REST_ENTRY_POINT);
+		}
+
+		public AccessDeniedHandler accessDeniedHandler() {
+			return new AccessDeniedHandler() {
+				@Override
+				public void handle(HttpServletRequest request, HttpServletResponse response,
+						AccessDeniedException accessDeniedException) throws IOException, ServletException {
+					if ("application/json".equals(request.getContentType())) {
+						/*response.setContentType("application/json");
+						response.sendError(HttpServletResponse.SC_UNAUTHORIZED);*/
+						response.sendRedirect(request.getContextPath()+"/error/unauthorised");
+					} else {
+						response.sendRedirect(request.getContextPath()+"/error");
+					}
+				}
+			};
 		}
     }
 }

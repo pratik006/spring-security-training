@@ -1,21 +1,25 @@
 package com.prapps.tutorial.spring.security.filter;
 
+import java.util.Locale;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.w3c.dom.Node;
 
 import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 @Component
 public class SoapAuthenticationInterceptor implements EndpointInterceptor {
+	public static final String MISSING_JWT_TOKEN = "No JWT token found in request headers";
 
 	@Override
 	public boolean handleRequest(MessageContext ctx, Object arg1) throws Exception {
@@ -25,18 +29,18 @@ public class SoapAuthenticationInterceptor implements EndpointInterceptor {
 		DOMSource bodyDomSource = (DOMSource) bodySource;
 		Node bodyNode = bodyDomSource.getNode();
 		if (bodyNode.getFirstChild() == null) {
-			throw new AuthenticationCredentialsNotFoundException("No JWT token found in request headers");
+			SoapBody soapBody = soapMessage.getSoapBody();
+			soapBody.addClientOrSenderFault(MISSING_JWT_TOKEN, Locale.ENGLISH);
+			throw new SoapFaultClientException(soapMessage);
 		}
 
 		String token = bodyNode.getTextContent();
 		if (token == null) {
-			//throw new JwtTokenMissingException("No JWT token found in request headers");
-			//throw new RuntimeException("No JWT token found in request headers");
-			throw new AuthenticationCredentialsNotFoundException("No JWT token found in request headers");
+			SoapBody soapBody = soapMessage.getSoapBody();
+			soapBody.addClientOrSenderFault(MISSING_JWT_TOKEN, Locale.ENGLISH);
+			throw new SoapFaultClientException(soapMessage);
 		}
-		//String authToken = token.substring(7);
 		UserDetails user = JwtTokenHelper.verifyToken(token);
-
 		return user != null;
 	}
 

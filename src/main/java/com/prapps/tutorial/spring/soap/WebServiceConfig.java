@@ -49,7 +49,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 	@Override
 	public void addInterceptors(List<EndpointInterceptor> interceptors) {
         // register global interceptor
-        interceptors.add(soapAuthenticationInterceptor);
+        //interceptors.add(soapAuthenticationInterceptor);
     }
 
 }

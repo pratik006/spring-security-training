@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,20 +17,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.stereotype.Component;
 
 import com.prapps.tutorial.spring.rest.security.TokenBasedAuthenticationSuccessHandlerImpl;
 import com.prapps.tutorial.spring.security.exception.SecurityException;
 import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
-@Component
 public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	private final String TOKEN_FILTER_APPLIED = "TOKEN_FILTER_APPLIED";
 
 	@Autowired
-	public JwtTokenProcessingFilter(@Qualifier("restAuthenticationManager") AuthenticationManager authenticationManager) {
-		super("/rest/secured/**");
+	public JwtTokenProcessingFilter(AuthenticationManager authenticationManager, String url) {
+		super(url);
 		super.setAuthenticationManager(authenticationManager);
 		setAuthenticationSuccessHandler(new TokenBasedAuthenticationSuccessHandlerImpl());
 	}

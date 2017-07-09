@@ -29,7 +29,6 @@ public class SecurityConfig {
 		@Autowired AccessDeniedHandler accessDeniedHandler;
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
-		@Autowired private JwtTokenProcessingFilter jwtTokenProcessingFilter;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -45,7 +44,7 @@ public class SecurityConfig {
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
 				.antMatchers("/login.html", "/ws/**").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
-				.antMatchers("/manage").hasAnyRole("ADMIN")
+				//.antMatchers("/manage").hasAnyRole("ADMIN")
 				.and()
 					.formLogin()
 						.loginPage("/login.html").loginProcessingUrl("/login")
@@ -56,7 +55,11 @@ public class SecurityConfig {
 				.authorizeRequests()
 	                .antMatchers(TOKEN_BASED_REST_ENTRY_POINT).authenticated() // Protected API End-points
 	                .and()
-	                .addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+	                .addFilterBefore(createJwtTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
 		};
+
+		public JwtTokenProcessingFilter createJwtTokenProcessingFilter() {
+			return new JwtTokenProcessingFilter(restAuthenticationManager, TOKEN_BASED_REST_ENTRY_POINT);
+		}
     }
 }

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,13 @@ public class MyCustomErrorController implements ErrorController {
     public void error(HttpServletResponse response) throws IOException {
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
+
+	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    @ExceptionHandler(Throwable.class)
+    public String unauthorisedException(HttpServletRequest request) throws Exception {
+        return "Unauthorised Request..";
+	}
 
 	@ResponseStatus(code = HttpStatus.UNAUTHORIZED)
     @RequestMapping("/unauthorised")

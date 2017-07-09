@@ -16,11 +16,8 @@ public class RestAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		//super.onAuthenticationFailure(request, response, exception);
-		if ("application/json".equals(request.getHeader("Accept"))) {
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
+		if ("application/json".equals(request.getContentType())) {
+			response.sendRedirect(request.getContextPath()+"/error/unauthorised");
 		} else {
 			response.sendRedirect("/error");
 		}

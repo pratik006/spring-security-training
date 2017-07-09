@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.prapps.tutorial.spring.rest.security.TokenBasedAuthenticationSuccessHandlerImpl;
 import com.prapps.tutorial.spring.security.exception.SecurityException;
@@ -27,10 +28,12 @@ public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFi
 	private final String TOKEN_FILTER_APPLIED = "TOKEN_FILTER_APPLIED";
 
 	@Autowired
-	public JwtTokenProcessingFilter(AuthenticationManager authenticationManager, String url) {
+	public JwtTokenProcessingFilter(AuthenticationManager authenticationManager,
+			AuthenticationFailureHandler authenticationFailureHandler, String url) {
 		super(url);
 		super.setAuthenticationManager(authenticationManager);
 		setAuthenticationSuccessHandler(new TokenBasedAuthenticationSuccessHandlerImpl());
+		setAuthenticationFailureHandler(authenticationFailureHandler);
 	}
 
 	@Override

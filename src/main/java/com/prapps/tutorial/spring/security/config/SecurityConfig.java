@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -35,6 +36,7 @@ public class SecurityConfig {
 
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
+		@Autowired AuthenticationFailureHandler authenticationFailureHandler;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -66,7 +68,7 @@ public class SecurityConfig {
 		};
 
 		public JwtTokenProcessingFilter createJwtTokenProcessingFilter() {
-			return new JwtTokenProcessingFilter(restAuthenticationManager, TOKEN_BASED_REST_ENTRY_POINT);
+			return new JwtTokenProcessingFilter(restAuthenticationManager, authenticationFailureHandler, TOKEN_BASED_REST_ENTRY_POINT);
 		}
 
 		public AccessDeniedHandler accessDeniedHandler() {
@@ -75,8 +77,6 @@ public class SecurityConfig {
 				public void handle(HttpServletRequest request, HttpServletResponse response,
 						AccessDeniedException accessDeniedException) throws IOException, ServletException {
 					if ("application/json".equals(request.getContentType())) {
-						/*response.setContentType("application/json");
-						response.sendError(HttpServletResponse.SC_UNAUTHORIZED);*/
 						response.sendRedirect(request.getContextPath()+"/error/unauthorised");
 					} else {
 						response.sendRedirect(request.getContextPath()+"/error");

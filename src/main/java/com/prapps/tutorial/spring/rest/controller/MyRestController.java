@@ -11,6 +11,7 @@ import com.prapps.tutorial.spring.dto.HelloResponse;
 @RequestMapping("/rest/secured")
 public class MyRestController {
 
+	@Secured({"ROLE_USER", "ROLE_ADMIN"})
 	@RequestMapping(value="/hello", method = {RequestMethod.GET, RequestMethod.POST})
 	public HelloResponse hello() {
 		return new HelloResponse("hello");

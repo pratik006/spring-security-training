@@ -2,8 +2,6 @@ package com.prapps.tutotial.spring.security.test;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
-
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
@@ -89,7 +87,7 @@ public class SpringSecurityTest {
 	@Test
 	public void shouldAccessSecuredResource() throws Exception {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		String token = JwtTokenHelper.createJsonWebToken(new UsernamePasswordAuthenticationToken(username, password, Arrays.asList(auth)));
+		String token = JwtTokenHelper.createJsonWebToken(new UsernamePasswordAuthenticationToken(username, password, null));
 		MvcResult mvcResult =  mvc.perform(MockMvcRequestBuilders.post("/rest/secured/hello")
 			.header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())

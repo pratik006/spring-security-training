@@ -28,7 +28,7 @@ public class SoapAuthenticationInterceptor implements EndpointInterceptor {
 			throw new AuthenticationCredentialsNotFoundException("No JWT token found in request headers");
 		}
 
-		String token = bodyNode.getFirstChild().getTextContent();
+		String token = bodyNode.getTextContent();
 		if (token == null) {
 			//throw new JwtTokenMissingException("No JWT token found in request headers");
 			//throw new RuntimeException("No JWT token found in request headers");

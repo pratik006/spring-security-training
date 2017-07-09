@@ -60,9 +60,10 @@ public class SoapClientHeaderInterceptor implements ClientInterceptor {
 					new UsernamePasswordAuthenticationToken(username, password, null));
 			Authentication auth = new Authentication();
 			auth.setToken(token);
-			JAXBContext carContext = JAXBContext.newInstance(Authentication.class);
-			Marshaller carMarshaller = carContext.createMarshaller();
-			carMarshaller.marshal(auth, sw);
+			JAXBContext context = JAXBContext.newInstance(Authentication.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+			marshaller.marshal(auth, sw);
 			result = sw.toString();
 		} catch (JAXBException e) {
 			throw new RuntimeException(e);

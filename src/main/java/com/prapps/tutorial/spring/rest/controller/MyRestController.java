@@ -1,7 +1,6 @@
 package com.prapps.tutorial.spring.rest.controller;
 
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +19,6 @@ public class MyRestController {
 	@RequestMapping(value="/manage", method = {RequestMethod.GET, RequestMethod.POST})
 	@Secured("ROLE_ADMIN")
 	public HelloResponse manage() {
-		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		return new HelloResponse("manage");
 	}
 }

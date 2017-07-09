@@ -18,7 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.prapps.tutorial.spring.rest.security.RestAuthenticationManager;
 import com.prapps.tutorial.spring.security.filter.JwtTokenProcessingFilter;
@@ -46,7 +45,8 @@ public class SecurityConfig {
 			restAuthenticationManager.setRestAuthenticationManager(auth);
 		}
 
-		@Override
+		/** Uncomment the following 2 methods and block the last method to enable Spring Security **/
+		/*@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
@@ -65,7 +65,7 @@ public class SecurityConfig {
 	                .and()
 	                .addFilterBefore(createJwtTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
 	                .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-		};
+		};*/
 
 		public JwtTokenProcessingFilter createJwtTokenProcessingFilter() {
 			return new JwtTokenProcessingFilter(restAuthenticationManager, authenticationFailureHandler, TOKEN_BASED_REST_ENTRY_POINT);
@@ -84,5 +84,13 @@ public class SecurityConfig {
 				}
 			};
 		}
+
+		/** Uncomment the following lines to disable and comment the above 2 methods Spring Security **/
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http
+				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
+				.antMatchers("/**").permitAll();
+		};
     }
 }

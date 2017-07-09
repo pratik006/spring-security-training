@@ -30,7 +30,6 @@ public class SecurityConfig {
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
 		@Autowired private JwtTokenProcessingFilter jwtTokenProcessingFilter;
-		//@Autowired private SoapTokenProcessingFilter soapTokenProcessingFilter;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -42,7 +41,7 @@ public class SecurityConfig {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-			http//.csrf().disable().authorizeRequests()
+			http
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
 				.antMatchers("/login.html", "/ws/**").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
@@ -56,12 +55,8 @@ public class SecurityConfig {
 				.and().csrf().and()
 				.authorizeRequests()
 	                .antMatchers(TOKEN_BASED_REST_ENTRY_POINT).authenticated() // Protected API End-points
-	                	.and()
-	                		.addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-	            /*.authorizeRequests()
-	                .antMatchers(TOKEN_BASED_SOAP_ENTRY_POINT).authenticated() // Protected API End-points
-	                	.and()
-	                		.addFilterBefore(soapTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class)*/;
+	                .and()
+	                .addFilterBefore(jwtTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
 		};
     }
 }

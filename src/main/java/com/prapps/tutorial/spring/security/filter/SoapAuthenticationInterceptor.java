@@ -40,22 +40,10 @@ public class SoapAuthenticationInterceptor implements EndpointInterceptor {
 		return user != null;
 	}
 
-	@Override
-	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	@Override public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception { return false; }
 
-	@Override
-	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	@Override public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception { return false; }
 
-	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
+	@Override public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception { }
 
 }

@@ -5,14 +5,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.apache.log4j.Logger;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -105,5 +109,28 @@ public class SpringSecurityTest {
 		LOG.debug("Response: " + jsonResponse);
 		HelloResponse actualResp = mapper.readValue(jsonResponse, HelloResponse.class);
 		Assert.assertEquals("hello", actualResp.getMessage());
+	}
+
+	@Test @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
+	public void shouldAccessSecuredAdminResource() throws Exception {
+
+		MvcResult mvcResult =  mvc.perform(post("/rest/secured/manage")
+			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andReturn();
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonResponse = mvcResult.getResponse().getContentAsString();
+		LOG.debug("Response: " + jsonResponse);
+		HelloResponse actualResp = mapper.readValue(jsonResponse, HelloResponse.class);
+		Assert.assertEquals("manage", actualResp.getMessage());
+	}
+
+	@Rule public ExpectedException expectedException = ExpectedException.none();
+
+	@Test @WithMockUser(username = "user", password = "user", roles = "USER")
+	public void shouldFailSecuredAdminResource() throws Exception {
+		expectedException.expectCause(Matchers.isA(AccessDeniedException.class));
+		mvc.perform(post("/rest/secured/manage").contentType(MediaType.APPLICATION_JSON));
 	}
 }

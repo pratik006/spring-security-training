@@ -98,7 +98,6 @@ public class SpringSecurityTest {
 
 	@Test @WithMockUser(username = "user", password = "user", roles = "USER")
 	public void shouldAccessSecuredResource() throws Exception {
-
 		MvcResult mvcResult =  mvc.perform(post("/rest/secured/hello")
 			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -113,7 +112,6 @@ public class SpringSecurityTest {
 
 	@Test @WithMockUser(username = "admin", password = "admin", roles = "ADMIN")
 	public void shouldAccessSecuredAdminResource() throws Exception {
-
 		MvcResult mvcResult =  mvc.perform(post("/rest/secured/manage")
 			.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -126,11 +124,12 @@ public class SpringSecurityTest {
 		Assert.assertEquals("manage", actualResp.getMessage());
 	}
 
-	@Rule public ExpectedException expectedException = ExpectedException.none();
-
 	@Test @WithMockUser(username = "user", password = "user", roles = "USER")
 	public void shouldFailSecuredAdminResource() throws Exception {
-		expectedException.expectCause(Matchers.isA(AccessDeniedException.class));
-		mvc.perform(post("/rest/secured/manage").contentType(MediaType.APPLICATION_JSON));
+		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac)
+				.apply(springSecurity())
+				.addFilters(restAuthFilter)
+				.build();
+		mvc.perform(post("/rest/secured/manage").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
 	}
 }

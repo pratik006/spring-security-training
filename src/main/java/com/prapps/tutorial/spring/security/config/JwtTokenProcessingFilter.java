@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.prapps.tutorial.spring.security.exception.SecurityException;
 
@@ -28,6 +29,16 @@ public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFi
 	public JwtTokenProcessingFilter(AuthenticationManager authenticationManager, String url) {
 		super(url);
 		super.setAuthenticationManager(authenticationManager);
+		setAuthenticationSuccessHandler(new AuthenticationSuccessHandler() {
+			@Override
+			public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+					Authentication authentication) throws IOException, ServletException {
+				String context = request.getContextPath();
+				String fullURL = request.getRequestURI();
+				String url = fullURL.substring(fullURL.indexOf(context) + context.length());
+				request.getRequestDispatcher(url).forward(request, response);				
+			}
+		});
 	}
 
 	@Override

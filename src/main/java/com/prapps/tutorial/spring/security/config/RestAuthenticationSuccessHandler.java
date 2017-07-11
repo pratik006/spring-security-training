@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.rest.security;
+package com.prapps.tutorial.spring.security.config;
 
 import java.io.IOException;
 
@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
-import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 @Component
 public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {

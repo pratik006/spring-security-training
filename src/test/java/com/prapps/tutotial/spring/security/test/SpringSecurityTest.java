@@ -33,8 +33,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prapps.tutorial.spring.ApplicationStarter;
 import com.prapps.tutorial.spring.dto.HelloResponse;
-import com.prapps.tutorial.spring.security.filter.RestAuthFilter;
-import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
+import com.prapps.tutorial.spring.security.config.JwtTokenHelper;
+import com.prapps.tutorial.spring.security.config.RestAuthFilter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

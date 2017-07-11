@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,12 +16,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import com.prapps.tutorial.spring.rest.security.RestAuthenticationManager;
-import com.prapps.tutorial.spring.security.filter.JwtTokenProcessingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +35,6 @@ public class SecurityConfig {
 
 		@Autowired @Qualifier("webAuthenticationSuccessHandler") AuthenticationSuccessHandler webAuthenticationSuccessHandler;
 		@Autowired RestAuthenticationManager restAuthenticationManager;
-		@Autowired AuthenticationFailureHandler authenticationFailureHandler;
 
 		@Override
 		protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -46,13 +45,13 @@ public class SecurityConfig {
 		}
 
 		/** Uncomment the following 2 methods and block the last method to enable Spring Security **/
-		/*@Override
+		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
 				.antMatchers("/login.html", "/rest/error", "/ws/**").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
-				//.antMatchers("/manage").hasAnyRole("ADMIN")
+				.antMatchers("/rest/manage").hasAnyRole("ADMIN")
 				.and()
 					.formLogin()
 						.loginPage("/login.html").loginProcessingUrl("/login")
@@ -65,10 +64,10 @@ public class SecurityConfig {
 	                .and()
 	                .addFilterBefore(createJwtTokenProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
 	                .exceptionHandling().accessDeniedHandler(accessDeniedHandler());
-		};*/
+		};
 
 		public JwtTokenProcessingFilter createJwtTokenProcessingFilter() {
-			return new JwtTokenProcessingFilter(restAuthenticationManager, authenticationFailureHandler, TOKEN_BASED_REST_ENTRY_POINT);
+			return new JwtTokenProcessingFilter(restAuthenticationManager, TOKEN_BASED_REST_ENTRY_POINT);
 		}
 
 		public AccessDeniedHandler accessDeniedHandler() {
@@ -84,13 +83,28 @@ public class SecurityConfig {
 				}
 			};
 		}
-
+		
+		@Bean
+		public AuthenticationFailureHandler authenticationFailureHandler() {
+			return new AuthenticationFailureHandler() {	
+				@Override
+				public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+						AuthenticationException exception) throws IOException, ServletException {
+					if ("application/json".equals(request.getContentType())) {
+						response.sendRedirect(request.getContextPath()+"/error/unauthorised");
+					} else {
+						response.sendRedirect("/error");
+					}
+				}
+			};
+		}
+		
 		/** Uncomment the following lines to disable and comment the above 2 methods Spring Security **/
-		@Override
+		/*@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
 				.antMatchers("/**").permitAll();
-		};
+		};*/
     }
 }

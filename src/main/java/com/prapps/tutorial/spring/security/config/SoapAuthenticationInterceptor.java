@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.filter;
+package com.prapps.tutorial.spring.security.config;
 
 import java.util.Locale;
 
@@ -14,8 +14,6 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.w3c.dom.Node;
-
-import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 @Component
 public class SoapAuthenticationInterceptor implements EndpointInterceptor {

@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.filter;
+package com.prapps.tutorial.spring.security.config;
 
 import java.io.IOException;
 
@@ -17,23 +17,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
-import com.prapps.tutorial.spring.rest.security.TokenBasedAuthenticationSuccessHandlerImpl;
 import com.prapps.tutorial.spring.security.exception.SecurityException;
-import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
 
 public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
 	private final String TOKEN_FILTER_APPLIED = "TOKEN_FILTER_APPLIED";
 
 	@Autowired
-	public JwtTokenProcessingFilter(AuthenticationManager authenticationManager,
-			AuthenticationFailureHandler authenticationFailureHandler, String url) {
+	public JwtTokenProcessingFilter(AuthenticationManager authenticationManager, String url) {
 		super(url);
 		super.setAuthenticationManager(authenticationManager);
-		setAuthenticationSuccessHandler(new TokenBasedAuthenticationSuccessHandlerImpl());
-		setAuthenticationFailureHandler(authenticationFailureHandler);
 	}
 
 	@Override

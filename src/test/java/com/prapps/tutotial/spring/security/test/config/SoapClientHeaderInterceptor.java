@@ -18,7 +18,7 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.StringSource;
 
-import com.prapps.tutorial.spring.security.jwt.JwtTokenHelper;
+import com.prapps.tutorial.spring.security.config.JwtTokenHelper;
 import com.prapps.tutorial.spring.soap.Authentication;
 
 public class SoapClientHeaderInterceptor implements ClientInterceptor {

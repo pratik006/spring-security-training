@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.jwt;
+package com.prapps.tutorial.spring.security.config;
 
 import java.security.Key;
 import java.util.ArrayList;

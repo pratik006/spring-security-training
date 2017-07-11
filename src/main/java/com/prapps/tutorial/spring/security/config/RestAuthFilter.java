@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.filter;
+package com.prapps.tutorial.spring.security.config;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,9 +19,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prapps.tutorial.spring.rest.security.RestAuthenticationFailureHandler;
-import com.prapps.tutorial.spring.rest.security.RestAuthenticationManager;
-import com.prapps.tutorial.spring.rest.security.RestAuthenticationSuccessHandler;
 
 @Component
 public class RestAuthFilter extends AbstractAuthenticationProcessingFilter {
@@ -31,12 +28,10 @@ public class RestAuthFilter extends AbstractAuthenticationProcessingFilter {
 	@Autowired
 	public RestAuthFilter(RestAuthenticationManager restAuthenticationManager,
 			@Qualifier("restAuthenticationSuccessHandler") RestAuthenticationSuccessHandler restAuthenticationSuccessHandler,
-			RestAuthenticationFailureHandler restAuthenticationFailuerHandler,
 			ObjectMapper mapper) {
 		super("/rest/login");
 		this.setAuthenticationManager(restAuthenticationManager);
 		this.setAuthenticationSuccessHandler(restAuthenticationSuccessHandler);
-		this.setAuthenticationFailureHandler(restAuthenticationFailuerHandler);
 		this.mapper = mapper;
 	}
 

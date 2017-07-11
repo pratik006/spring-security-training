@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.security.config.handler;
+package com.prapps.tutorial.spring.security.config;
 
 import java.io.IOException;
 import java.util.Collection;

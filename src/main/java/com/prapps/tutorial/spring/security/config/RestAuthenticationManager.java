@@ -1,4 +1,4 @@
-package com.prapps.tutorial.spring.rest.security;
+package com.prapps.tutorial.spring.security.config;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

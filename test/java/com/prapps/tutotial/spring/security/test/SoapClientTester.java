@@ -1,10 +1,5 @@
 package com.prapps.tutotial.spring.security.test;
 
-import com.prapps.tutorial.spring.ApplicationStarter;
-import com.prapps.tutorial.spring.GetCountryRequest;
-import com.prapps.tutorial.spring.GetCountryResponse;
-import com.prapps.tutotial.spring.security.test.config.SoapClientConfig;
-import com.prapps.tutotial.spring.security.test.config.SoapClientHeaderInterceptor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +17,13 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.client.SoapFaultClientException;
+
+import com.prapps.tutorial.spring.ApplicationStarter;
+import com.prapps.tutotial.spring.security.test.config.SoapClientConfig;
+import com.prapps.tutotial.spring.security.test.config.SoapClientHeaderInterceptor;
+
+import io.spring.guides.gs_producing_web_service.GetCountryRequest;
+import io.spring.guides.gs_producing_web_service.GetCountryResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT, properties = {"server.port: 8080"})

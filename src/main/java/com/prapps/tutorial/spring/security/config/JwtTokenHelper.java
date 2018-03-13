@@ -1,32 +1,21 @@
 package com.prapps.tutorial.spring.security.config;
 
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-
+import com.prapps.tutorial.spring.security.exception.SecurityException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.prapps.tutorial.spring.security.exception.SecurityException;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.DefaultClaims;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
+import java.util.*;
 
 public class JwtTokenHelper {
 	private static final String ISSUER = "apps-pratiks application";

@@ -1,14 +1,6 @@
 package com.prapps.tutorial.spring.security.config;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.prapps.tutorial.spring.security.exception.SecurityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.prapps.tutorial.spring.security.exception.SecurityException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -59,7 +57,7 @@ public class JwtTokenProcessingFilter extends AbstractAuthenticationProcessingFi
 		} catch (SecurityException e) {
 			throw new AuthenticationCredentialsNotFoundException(e.getMsg());
 		}
-		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+		return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
 	}
 
 	@Override

@@ -1,14 +1,12 @@
 package com.prapps.tutorial.spring.soap;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
+import com.prapps.tutorial.spring.Country;
+import com.prapps.tutorial.spring.Currency;
 import org.springframework.stereotype.Component;
 
-import io.spring.guides.gs_producing_web_service.Country;
-import io.spring.guides.gs_producing_web_service.Currency;
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class CountryRepository {

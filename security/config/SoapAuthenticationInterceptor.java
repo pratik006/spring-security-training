@@ -1,5 +1,10 @@
 package com.prapps.tutorial.spring.security.config;
 
+import java.util.Locale;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.context.MessageContext;
@@ -9,10 +14,6 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.w3c.dom.Node;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import java.util.Locale;
 
 @Component
 public class SoapAuthenticationInterceptor implements EndpointInterceptor {

@@ -1,5 +1,11 @@
 package com.prapps.tutorial.spring.security.config;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +21,6 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -48,7 +49,7 @@ public class SecurityConfig {
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.csrf().ignoringAntMatchers("/rest/**", "/ws/**").and().authorizeRequests()
-				.antMatchers("/login.html", "/rest/error", "/ws/**", "/rest/secured/manage", "/rest/secured/hello").permitAll()
+				.antMatchers("/login.html", "/rest/error", "/ws/**").permitAll()
 				.antMatchers("/index.html").hasAnyRole("USER", "ADMIN")
 				.antMatchers("/rest/secured/manage").hasAnyRole("ADMIN")
 				.antMatchers("/rest/secured/hello").hasAnyRole("USER", "ADMIN")
@@ -89,7 +90,7 @@ public class SecurityConfig {
 			return new AuthenticationFailureHandler() {	
 				@Override
 				public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-						AuthenticationException exception) throws IOException {
+						AuthenticationException exception) throws IOException, ServletException {
 					if ("application/json".equals(request.getContentType())) {
 						response.sendRedirect(request.getContextPath()+"/error/unauthorised");
 					} else {

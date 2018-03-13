@@ -1,14 +1,13 @@
 package com.prapps.tutorial.spring.rest.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/")
@@ -42,7 +41,6 @@ public class PageController {
 	public ModelAndView manage() {
 		Map<String, Object> models = new HashMap<>();
 		models.put("message", "welcome to manage dashboard");
-		models.put("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority());
 		return new ModelAndView("manage", models);
 	}
 	
@@ -52,7 +50,6 @@ public class PageController {
 	public ModelAndView manageUpdate(@ModelAttribute("message") String message) {
 		Map<String, Object> models = new HashMap<>();
 		models.put("message", message);
-		models.put("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().iterator().next().getAuthority());
 		return new ModelAndView("manage", models);
 	}
 }

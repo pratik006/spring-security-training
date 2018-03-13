@@ -1,7 +1,6 @@
 package com.prapps.tutorial.spring.soap;
 
-import java.util.List;
-
+import com.prapps.tutorial.spring.security.config.SoapAuthenticationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +15,9 @@ import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
-import com.prapps.tutorial.spring.security.config.SoapAuthenticationInterceptor;
+import java.util.List;
+
+//import org.springframework.beans.factory.annotation.Autowired;
 
 @EnableWs
 @Configuration
@@ -49,7 +50,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 	@Override
 	public void addInterceptors(List<EndpointInterceptor> interceptors) {
         // register global interceptor
-        //interceptors.add(soapAuthenticationInterceptor);
+        interceptors.add(soapAuthenticationInterceptor);
     }
 
 }
